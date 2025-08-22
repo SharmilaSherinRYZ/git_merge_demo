@@ -29,7 +29,7 @@ For `feature/bob`: Use a rebase (git rebase) to apply its changes on top of main
     - Tip of `feature/alice` (`2ac2cf8d`, red)
 - The commit graph displays a branching structure, clearly showing where the feature branch (red) diverged and was integrated into main (blue).
 
-![Diagram](git_merge.drawio.png)
+![Diagram](git_merge.png)
 
 
 **Result:**  
@@ -52,14 +52,48 @@ Git Merge is a command used to combine the changes from two branches into one. I
 - **No Deletion**: Branches remain intact after merging.
 **Used for Integration**: Commonly integrates feature branches into main branches.
 
+### Git Commands Used
+
+**1. Check Current Branch**
+
+`git branch`
+
+To see which branch you are currently on.
+
+**2. Switch to Main Branch**
+
+`git checkout main`
+
+Always merge your feature branch into the main branch, so first switch to main.
+
+**3. Update Main Branch (Optional but Recommended)**
+
+`git pull origin main`
+
+To get the latest changes from the remote main branch before merging.
+
+**4. Merge Feature Branch into Main**
+
+`git merge feature-branch-name`
+
+Replace feature-branch-name with the actual name of your feature branch.
+
+This command merges the feature branch changes into the main branch.
+
+**5. Resolve Conflicts (If Any)**
+
+If Git shows conflicts, open conflicting files, fix them manually.
+
 ## Git Rebase Example: Integrating feature/bob
 
-- Rebasing `feature/bob` (yellow) onto `main` (blue) rewrites the history of `feature/bob` so its commits appear after the latest commit on `main`.
-- The commits from `feature/bob` (`581093`, `6399fce`, yellow) are reapplied on top of `main`'s tip (`b26abd5`, blue).
-- The commit graph becomes linear, with no merge commit or branching structure.
-- After rebasing, a fast-forward merge moves the `main` branch pointer forward to include the rebased commits.
-- The history appears as if `feature/bob` was developed after the latest changes on `main`, making the project history cleaner and easier to follow.
-- The diagram below visually illustrates this linear progression, with all commits in a single line.
+- Rebasing `feature/bob` (yellow) onto `main` (blue) rewrites the history of `feature/bob` only.
+- The commits from `feature/bob` (`581093`, `6399fce`, yellow) are temporarily removed.
+- `feature/bob` is moved to the tip of `main` (`b26abd5`, blue).
+- The feature commits are reapplied on top of `main` as new commits.
+- The commit graph for `feature/bob` becomes linear, with no merge commit or branching structure.
+- At this stage, `main` is unchanged — only the feature branch’s history has been rewritten.
+- After rebasing, merging `feature/bob` into `main` with a fast-forward merge moves the `main` branch pointer forward to include the rebased commits.
+- The history appears as if `feature/bob` was developed after the latest changes on `main`, resulting in a cleaner, linear history.
 
 ![Diagram](git_rebase.drawio.png)
 
@@ -82,6 +116,37 @@ Git Rebase is a command used to move or combine a sequence of commits to a new b
 - **Requires Caution:** Should not rebase public/shared branches.
 - **Used for Streamlining**: Commonly rebases feature branches onto updated main branches.
 
+### Git Commands Used
+
+**1. Check Current Branch**
+
+`git branch`
+
+Verify which branch you are currently on (usually your feature branch).
+
+**2. Switch to Feature Branch (If not already there)**
+
+`git checkout feature-branch-name`
+
+Replace feature-branch-name with your actual branch name.
+
+**3. Fetch Latest Changes from Remote**
+
+`git fetch origin`
+
+Get the latest commits from the remote repository.
+
+**4. Rebase Feature Branch onto Main Branch**
+
+`git rebase origin/main`
+
+This reapplies your feature branch commits on top of the latest main branch.
+
+**5. Resolve Conflicts (If Any)**
+
+If conflicts appear, fix them manually in the conflicting files
+
+
 ## Git Merge V/s Rebase
 
 | Git Merge                                                | Git Rebase                                                   |
@@ -90,3 +155,19 @@ Git Rebase is a command used to move or combine a sequence of commits to a new b
 | Preserves the complete commit history.                   | Creates a linear history by removing merge commits.          |
 | Useful for integrating feature branches.                 | Ideal for a clean, simplified project history.               |
 | Does not alter existing commits.                         | Rewrites commit hashes and order.                            |
+
+### When to Use Merge vs Rebase
+
+**Use Merge when:**
+
+You want to preserve the exact history of development.
+
+Team collaboration is involved, and you don’t want to rewrite shared history.
+
+You need a clear picture of how and when branches diverged and merged.
+
+**Use Rebase when:**
+
+You are working on a private feature branch and want to keep history clean before merging.
+
+You prefer a linear commit history without merge commits.
